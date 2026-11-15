@@ -128,33 +128,49 @@
             </div>
             <p>Use the same public mission data and tools that power scientific discovery.</p>
           </div>
+          <div class="resource-tools">
+            <label class="resource-search">
+              <span class="sr-only">Search resources</span>
+              <input id="resourceSearch" type="search" placeholder="SEARCH ARCHIVES..." />
+            </label>
+            <label class="resource-filter">
+              <span class="sr-only">Filter resources</span>
+              <select id="resourceFilter">
+                <option value="all">ALL SOURCES</option>
+                <option value="nasa">NASA / IPAC</option>
+                <option value="canada">CANADIAN PARTNERS</option>
+                <option value="gaia">GAIA / ESA</option>
+              </select>
+            </label>
+            <span class="resource-count" id="resourceCount">6 RESOURCES</span>
+          </div>
           <div class="resource-grid">
-            <a class="resource-link" href="https://irsa.ipac.caltech.edu/Missions/spherex.html" target="_blank" rel="noreferrer">
+            <a class="resource-link" data-source="nasa" data-search="spherex nasa ipac resources archive documentation" href="https://irsa.ipac.caltech.edu/Missions/spherex.html" target="_blank" rel="noreferrer">
               <span class="resource-kicker">NASA / IPAC</span>
               <strong>SPHEREx resources <span>↗</span></strong>
               <small>Mission archive, documentation, and public data access.</small>
             </a>
-            <a class="resource-link" href="https://github.com/SPHERExCal" target="_blank" rel="noreferrer">
+            <a class="resource-link" data-source="nasa" data-search="spherex python notebooks tutorial code" href="https://github.com/SPHERExCal" target="_blank" rel="noreferrer">
               <span class="resource-kicker">LEARN WITH CODE</span>
               <strong>SPHEREx notebooks <span>↗</span></strong>
               <small>Python examples for querying and working with SPHEREx data.</small>
             </a>
-            <a class="resource-link" href="https://irsa.ipac.caltech.edu/applications/wise/" target="_blank" rel="noreferrer">
+            <a class="resource-link" data-source="nasa" data-search="wise wiseview infrared mission" href="https://irsa.ipac.caltech.edu/applications/wise/" target="_blank" rel="noreferrer">
               <span class="resource-kicker">WISE MISSION</span>
               <strong>WiseView <span>↗</span></strong>
               <small>Browse time-based infrared observations and compare epochs.</small>
             </a>
-            <a class="resource-link" href="https://gea.esac.esa.int/archive/" target="_blank" rel="noreferrer">
+            <a class="resource-link" data-source="gaia" data-search="gaia esa data release 3 astrometry photometry" href="https://gea.esac.esa.int/archive/" target="_blank" rel="noreferrer">
               <span class="resource-kicker">ESA / GAIA</span>
               <strong>Gaia Data Release 3 <span>↗</span></strong>
               <small>Astrometry, photometry, and stellar measurements from DR3.</small>
             </a>
-            <a class="resource-link" href="https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/" target="_blank" rel="noreferrer">
+            <a class="resource-link" data-source="canada" data-search="canada cadc astronomy archive telescope observations" href="https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/" target="_blank" rel="noreferrer">
               <span class="resource-kicker">CANADA</span>
               <strong>CADC archive <span>↗</span></strong>
               <small>Canadian and international telescope observations.</small>
             </a>
-            <a class="resource-link" href="https://www.asc-csa.gc.ca/eng/satellites/neossat/" target="_blank" rel="noreferrer">
+            <a class="resource-link" data-source="canada" data-search="canada csa neossat asteroids space debris exoplanets" href="https://www.asc-csa.gc.ca/eng/satellites/neossat/" target="_blank" rel="noreferrer">
               <span class="resource-kicker">CSA / NEOSSAT</span>
               <strong>Near-Earth observations <span>↗</span></strong>
               <small>Asteroids, space debris, and exoplanet observations from Canada.</small>

@@ -19,6 +19,10 @@ const modeStatus = document.querySelector("#modeStatus");
 const playButton = document.querySelector("#playButton");
 const bandSelect = document.querySelector("#bandSelect");
 const shareButton = document.querySelector("#shareButton");
+const resourceSearch = document.querySelector("#resourceSearch");
+const resourceFilter = document.querySelector("#resourceFilter");
+const resourceCount = document.querySelector("#resourceCount");
+const resourceLinks = [...document.querySelectorAll(".resource-link")];
 
 const targets = {
   barnard: { name: "Barnard's Star", coordinates: "17h 57m 48.5s, +04d 41m 36s", note: "A high-proper-motion red dwarf. Use IRSA to verify available SPHEREx epochs." },
@@ -401,6 +405,23 @@ document.querySelector("#stepForward").addEventListener("click", () => {
 });
 timeline.addEventListener("input", () => { timelineLabel.textContent = "2025 public reference"; });
 timeline.addEventListener("input", () => renderObservation(Number(timeline.value)));
+
+function filterResources() {
+  const search = resourceSearch.value.trim().toLowerCase();
+  const source = resourceFilter.value;
+  let visible = 0;
+  resourceLinks.forEach((resource) => {
+    const matchesSearch = !search || resource.dataset.search.includes(search);
+    const matchesSource = source === "all" || resource.dataset.source === source;
+    const isVisible = matchesSearch && matchesSource;
+    resource.hidden = !isVisible;
+    if (isVisible) visible += 1;
+  });
+  resourceCount.textContent = `${visible} RESOURCE${visible === 1 ? "" : "S"}`;
+}
+
+resourceSearch.addEventListener("input", filterResources);
+resourceFilter.addEventListener("change", filterResources);
 image.addEventListener("error", () => {
   image.src = referenceImageSource;
   coverageMessage.hidden = false;
