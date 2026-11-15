@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkySpotter · SPHEREx infrared sky explorer</title>
+    <meta name="description" content="Explore public SPHEREx infrared sky imagery and prepare real IRSA cutout queries." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#sky"><span class="brand-mark">✦</span> SKYSPOTTER</a>
+      <span class="mission-status"><i></i> SPHEREx public preview</span>
+    </header>
+
+    <main>
+      <section class="app-shell" id="sky">
+        <div class="app-header">
+          <div>
+            <p class="eyebrow">PLANET X + SPHEREx</p>
+            <h1>Fly through the<br /><em>infrared sky.</em></h1>
+          </div>
+          <p class="intro">Search a position, move across the real NASA map, and open the archive when you are ready for a true SPHEREx cutout.</p>
+        </div>
+
+        <div class="search-row">
+          <form id="coordinateForm" class="coordinate-search">
+            <label for="coordinateInput">RA / DEC SEARCH</label>
+            <input id="coordinateInput" value="08h 55m 10.831s, -07d 14m 42.53s" aria-label="Right ascension and declination" />
+            <button type="submit">QUERY SPHEREx <span>↗</span></button>
+          </form>
+          <label class="target-select-label" for="targetSelect">PRESETS
+            <select id="targetSelect">
+              <option value="barnard">Barnard's Star</option>
+              <option value="epsilon">Epsilon Indi B</option>
+              <option value="wise0855">WISE 0855</option>
+              <option value="rwaurigae">RW Aurigae</option>
+              <option value="rdraconis">R Draconis</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="workspace">
+          <section class="viewer-card">
+            <div class="viewer-toolbar">
+              <div><span class="toolbar-label">REAL NASA SOURCE</span><strong>SPHEREx all-sky map · 2025</strong></div>
+              <div class="viewer-actions">
+                <label class="band-control">BAND
+                  <select id="bandSelect" aria-label="SPHEREx band selector">
+                    <option value="all">ALL 102 · COMPOSITE</option>
+                  </select>
+                </label>
+                <button id="zoomOut" aria-label="Zoom out">−</button>
+                <span id="zoomReadout">1.0×</span>
+                <button id="zoomIn" aria-label="Zoom in">+</button>
+                <button id="resetView">RESET</button>
+              </div>
+            </div>
+            <div class="sky-viewport" id="skyViewport">
+              <div class="sky-image-wrap" id="skyImageWrap">
+                <img id="skyImage" src="https://svs.gsfc.nasa.gov/vis/a030000/a031300/a031376/spherex-swipe-00275.png" alt="NASA SPHEREx all-sky infrared map from 2025" draggable="false" />
+                <canvas id="fitsCanvas" aria-label="SPHEREx FITS cutout rendered from IRSA data"></canvas>
+              </div>
+              <div class="map-overlay">
+                <span>DRAG TO PAN · SCROLL TO ZOOM</span>
+                <span id="viewCoordinates">RA 08h 55m · DEC −07° 14′</span>
+              </div>
+              <div class="coverage-message" id="coverageMessage" hidden>
+                <strong>No SPHEREx observations available for this region/time.</strong>
+                <span>Try a different date or open the IRSA Cutout Tool to query the archive.</span>
+              </div>
+            </div>
+            <div class="viewer-caption">
+              <span><i class="source-dot"></i> NASA SVS reference image · real SPHEREx mission visualization</span>
+              <a href="https://svs.gsfc.nasa.gov/31376/" target="_blank" rel="noreferrer">SOURCE ↗</a>
+            </div>
+          </section>
+
+          <aside class="info-panel">
+            <div class="panel-topline"><span class="eyebrow">TARGET INSPECTOR</span><span id="dataState" class="state-chip">REFERENCE LOADED</span></div>
+            <h2 id="targetName">WISE 0855</h2>
+            <p class="target-note" id="targetNote">A nearby cold brown dwarf. Kept here as a search target; coverage must be verified in IRSA.</p>
+            <dl class="metadata">
+              <div><dt>RA / DEC</dt><dd id="metadataCoordinates">08h 55m 10.831s<br />−07d 14m 42.53s</dd></div>
+              <div><dt>OBSERVATION DATE</dt><dd id="metadataDate">2025 reference map</dd></div>
+              <div><dt>BAND</dt><dd id="metadataBand">All-sky composite</dd></div>
+              <div><dt>EXPOSURE / QUALITY</dt><dd id="metadataQuality">Not provided in public preview</dd></div>
+            </dl>
+            <a class="irsa-button" href="https://irsa.ipac.caltech.edu/data/SPHEREx/docs/cutout_tool.html" target="_blank" rel="noreferrer">OPEN IRSA CUTOUT TOOL <span>↗</span></a>
+            <button class="share-button" id="shareButton">COPY SHAREABLE SEARCH URL</button>
+            <p class="panel-footnote">Metadata is never invented here. A real cutout response will replace this preview record when a backend is connected.</p>
+          </aside>
+        </div>
+
+        <section class="controls-card">
+          <div class="control-heading">
+            <div><span class="toolbar-label">TIME PLAYER</span><strong id="timelineLabel">2025 public reference</strong></div>
+            <div class="play-controls">
+              <button id="stepBack" aria-label="Previous observation">←</button>
+              <button id="playButton" class="play-button">PLAY ▶</button>
+              <button id="stepForward" aria-label="Next observation">→</button>
+            </div>
+          </div>
+          <input id="timeline" class="timeline" type="range" min="0" max="0" value="0" aria-label="SPHEREx observation timeline" />
+          <div class="timeline-labels"><span>NO ARCHIVE DATES LOADED</span><span>2025 REFERENCE</span></div>
+          <div class="mode-row">
+            <button class="mode-button active" data-mode="normal">IMAGE VIEW</button>
+            <button class="mode-button" data-mode="blink">BLINK MODE</button>
+            <button class="mode-button" data-mode="difference">DIFFERENCE MODE</button>
+            <span class="mode-status" id="modeStatus">One public reference image loaded. Add archive dates to compare.</span>
+          </div>
+        </section>
+
+        <section class="coverage-note">
+          <div class="coverage-icon">◎</div>
+          <div><strong>One real image first.</strong><p>This demo intentionally shows the NASA SPHEREx map instead of fake stars. IRSA cutouts, dates, spectra, and difference images require a small server-side archive adapter.</p></div>
+          <a href="https://irsa.ipac.caltech.edu/Missions/spherex.html" target="_blank" rel="noreferrer">BROWSE IRSA ↗</a>
+        </section>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/fitsjs@0.6.6/lib/fits.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
