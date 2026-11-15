@@ -3,183 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SkySpotter · SPHEREx infrared sky explorer</title>
-    <meta name="description" content="Explore public SPHEREx infrared sky imagery and prepare real IRSA cutout queries." />
+    <title>SPHEREx Motion Lab</title>
+    <meta name="description" content="Explore changing patches of sky with NASA's SPHEREx mission." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <a class="brand" href="#sky"><span class="brand-mark">✦</span> SKYSPOTTER</a>
-      <span class="mission-status"><i></i> SPHEREx public preview</span>
+    <header class="site-header">
+      <a class="brand" href="#top"><span class="brand-orbit">◉</span><span>SPHEREx</span><b>motion lab</b></a>
+      <nav><a href="#explore">Explore</a><a href="#how-it-works">How it works</a><a href="#resources">Resources</a></nav>
+      <span class="live-pill"><i></i> MISSION DATA / PUBLIC</span>
     </header>
 
-    <main>
-      <section class="app-shell" id="sky">
-        <div class="app-header">
-          <div>
-            <p class="eyebrow">PLANET X + SPHEREx</p>
-            <h1>Fly through the<br /><em>infrared sky.</em></h1>
-          </div>
-          <p class="intro">Search a position, move across the real NASA map, and open the archive when you are ready for a true SPHEREx cutout.</p>
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="kicker">NASA SPHEREx · A PUBLIC SKY SURVEY</p>
+          <h1>Find what<br /><em>moves.</em></h1>
+          <p class="hero-lede">One sky. 102 infrared bands. A new view every six months. Compare real observations and help reveal the objects hiding in motion.</p>
+          <a class="hero-link" href="#explore">START EXPLORING <span>↓</span></a>
         </div>
-
-        <div class="search-row">
-          <form id="coordinateForm" class="coordinate-search">
-            <label for="coordinateInput">RA / DEC SEARCH</label>
-            <input id="coordinateInput" value="08h 55m 10.831s, -07d 14m 42.53s" aria-label="Right ascension and declination" />
-            <button type="submit">QUERY SPHEREx <span>↗</span></button>
-          </form>
-          <label class="target-select-label" for="targetSelect">PRESETS
-            <select id="targetSelect">
-              <option value="barnard">Barnard's Star</option>
-              <option value="epsilon">Epsilon Indi B</option>
-              <option value="wise0855">WISE 0855</option>
-              <option value="rwaurigae">RW Aurigae</option>
-              <option value="rdraconis">R Draconis</option>
-            </select>
-          </label>
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit-dot"></div>
+          <span class="hero-coordinate">08h 55m 10s<br /><b>−07° 14′ 42″</b></span>
+          <span class="hero-label">WISE 0855<br /><b>FAST-MOVING BROWN DWARF</b></span>
         </div>
-
-        <div class="workspace">
-          <section class="viewer-card">
-            <div class="viewer-toolbar">
-              <div><span class="toolbar-label">REAL NASA SOURCE</span><strong>SPHEREx all-sky map · 2025</strong></div>
-              <div class="viewer-actions">
-                <label class="band-control">BAND
-                  <select id="bandSelect" aria-label="SPHEREx band selector">
-                    <option value="all">ALL 102 · COMPOSITE</option>
-                  </select>
-                </label>
-                <button id="zoomOut" aria-label="Zoom out">−</button>
-                <span id="zoomReadout">1.0×</span>
-                <button id="zoomIn" aria-label="Zoom in">+</button>
-                <button id="resetView">RESET</button>
-              </div>
-            </div>
-            <div class="sky-viewport" id="skyViewport">
-              <div class="sky-image-wrap" id="skyImageWrap">
-                <img id="skyImage" src="https://svs.gsfc.nasa.gov/vis/a030000/a031300/a031376/spherex-swipe-00275.png" alt="NASA SPHEREx all-sky infrared map from 2025" draggable="false" />
-                <canvas id="fitsCanvas" aria-label="SPHEREx FITS cutout rendered from IRSA data"></canvas>
-              </div>
-              <div class="map-overlay">
-                <span>DRAG TO PAN · SCROLL TO ZOOM</span>
-                <span id="viewCoordinates">RA 08h 55m · DEC −07° 14′</span>
-              </div>
-              <div class="coverage-message" id="coverageMessage" hidden>
-                <strong>No SPHEREx observations available for this region/time.</strong>
-                <span>Try a different date or open the IRSA Cutout Tool to query the archive.</span>
-              </div>
-            </div>
-            <div class="viewer-caption">
-              <span><i class="source-dot"></i> NASA SVS reference image · real SPHEREx mission visualization</span>
-              <a href="https://svs.gsfc.nasa.gov/31376/" target="_blank" rel="noreferrer">SOURCE ↗</a>
-            </div>
-          </section>
-
-          <aside class="info-panel">
-            <div class="panel-topline"><span class="eyebrow">TARGET INSPECTOR</span><span id="dataState" class="state-chip">REFERENCE LOADED</span></div>
-            <h2 id="targetName">WISE 0855</h2>
-            <p class="target-note" id="targetNote">A nearby cold brown dwarf. Kept here as a search target; coverage must be verified in IRSA.</p>
-            <dl class="metadata">
-              <div><dt>RA / DEC</dt><dd id="metadataCoordinates">08h 55m 10.831s<br />−07d 14m 42.53s</dd></div>
-              <div><dt>OBSERVATION DATE</dt><dd id="metadataDate">2025 reference map</dd></div>
-              <div><dt>BAND</dt><dd id="metadataBand">All-sky composite</dd></div>
-              <div><dt>EXPOSURE / QUALITY</dt><dd id="metadataQuality">Not provided in public preview</dd></div>
-            </dl>
-            <a class="irsa-button" href="https://irsa.ipac.caltech.edu/data/SPHEREx/docs/cutout_tool.html" target="_blank" rel="noreferrer">OPEN IRSA CUTOUT TOOL <span>↗</span></a>
-            <button class="share-button" id="shareButton">COPY SHAREABLE SEARCH URL</button>
-            <p class="panel-footnote">Metadata is never invented here. A real cutout response will replace this preview record when a backend is connected.</p>
-          </aside>
-        </div>
-
-        <section class="controls-card">
-          <div class="control-heading">
-            <div><span class="toolbar-label">TIME PLAYER</span><strong id="timelineLabel">2025 public reference</strong></div>
-            <div class="play-controls">
-              <button id="stepBack" aria-label="Previous observation">←</button>
-              <button id="playButton" class="play-button">PLAY ▶</button>
-              <button id="stepForward" aria-label="Next observation">→</button>
-            </div>
-          </div>
-          <input id="timeline" class="timeline" type="range" min="0" max="0" value="0" aria-label="SPHEREx observation timeline" />
-          <div class="timeline-labels"><span>NO ARCHIVE DATES LOADED</span><span>2025 REFERENCE</span></div>
-          <div class="mode-row">
-            <button class="mode-button active" data-mode="normal">IMAGE VIEW</button>
-            <button class="mode-button" data-mode="blink">BLINK MODE</button>
-            <button class="mode-button" data-mode="difference">DIFFERENCE MODE</button>
-            <span class="mode-status" id="modeStatus">One public reference image loaded. Add archive dates to compare.</span>
-          </div>
-        </section>
-
-        <section class="coverage-note">
-          <div class="coverage-icon">◎</div>
-          <div><strong>One real image first.</strong><p>This demo intentionally shows the NASA SPHEREx map instead of fake stars. IRSA cutouts, dates, spectra, and difference images require a small server-side archive adapter.</p></div>
-          <a href="https://irsa.ipac.caltech.edu/Missions/spherex.html" target="_blank" rel="noreferrer">BROWSE IRSA ↗</a>
-        </section>
-
-        <section class="resources-card">
-          <div class="resources-heading">
-            <div>
-              <span class="eyebrow">DATA &amp; RESOURCES</span>
-              <h2>Explore the real archives.</h2>
-            </div>
-            <p>Use the same public mission data and tools that power scientific discovery.</p>
-          </div>
-          <div class="resource-tools">
-            <label class="resource-search">
-              <span class="sr-only">Search resources</span>
-              <input id="resourceSearch" type="search" placeholder="SEARCH ARCHIVES..." />
-            </label>
-            <label class="resource-filter">
-              <span class="sr-only">Filter resources</span>
-              <select id="resourceFilter">
-                <option value="all">ALL SOURCES</option>
-                <option value="nasa">NASA / IPAC</option>
-                <option value="canada">CANADIAN PARTNERS</option>
-                <option value="gaia">GAIA / ESA</option>
-              </select>
-            </label>
-            <span class="resource-count" id="resourceCount">6 RESOURCES</span>
-          </div>
-          <div class="resource-grid">
-            <a class="resource-link" data-source="nasa" data-search="spherex nasa ipac resources archive documentation" href="https://irsa.ipac.caltech.edu/Missions/spherex.html" target="_blank" rel="noreferrer">
-              <span class="resource-kicker">NASA / IPAC</span>
-              <strong>SPHEREx resources <span>↗</span></strong>
-              <small>Mission archive, documentation, and public data access.</small>
-            </a>
-            <a class="resource-link" data-source="nasa" data-search="spherex python notebooks tutorial code" href="https://github.com/SPHERExCal" target="_blank" rel="noreferrer">
-              <span class="resource-kicker">LEARN WITH CODE</span>
-              <strong>SPHEREx notebooks <span>↗</span></strong>
-              <small>Python examples for querying and working with SPHEREx data.</small>
-            </a>
-            <a class="resource-link" data-source="nasa" data-search="wise wiseview infrared mission" href="https://irsa.ipac.caltech.edu/applications/wise/" target="_blank" rel="noreferrer">
-              <span class="resource-kicker">WISE MISSION</span>
-              <strong>WiseView <span>↗</span></strong>
-              <small>Browse time-based infrared observations and compare epochs.</small>
-            </a>
-            <a class="resource-link" data-source="gaia" data-search="gaia esa data release 3 astrometry photometry" href="https://gea.esac.esa.int/archive/" target="_blank" rel="noreferrer">
-              <span class="resource-kicker">ESA / GAIA</span>
-              <strong>Gaia Data Release 3 <span>↗</span></strong>
-              <small>Astrometry, photometry, and stellar measurements from DR3.</small>
-            </a>
-            <a class="resource-link" data-source="canada" data-search="canada cadc astronomy archive telescope observations" href="https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/" target="_blank" rel="noreferrer">
-              <span class="resource-kicker">CANADA</span>
-              <strong>CADC archive <span>↗</span></strong>
-              <small>Canadian and international telescope observations.</small>
-            </a>
-            <a class="resource-link" data-source="canada" data-search="canada csa neossat asteroids space debris exoplanets" href="https://www.asc-csa.gc.ca/eng/satellites/neossat/" target="_blank" rel="noreferrer">
-              <span class="resource-kicker">CSA / NEOSSAT</span>
-              <strong>Near-Earth observations <span>↗</span></strong>
-              <small>Asteroids, space debris, and exoplanet observations from Canada.</small>
-            </a>
-          </div>
-        </section>
       </section>
+
+      <section class="mission-strip" aria-label="Mission facts">
+        <div><strong>102</strong><span>infrared<br />bands</span></div>
+        <div><strong>6 mo</strong><span>full-sky<br />cadence</span></div>
+        <div><strong>1B+</strong><span>objects<br />mapped</span></div>
+        <div class="strip-note">The sky is not static.<br /><b>Now you can see why.</b></div>
+      </section>
+
+      <section class="explorer" id="explore">
+        <div class="section-intro">
+          <div><p class="kicker">01 / SKY EXPLORER</p><h2>Put a patch<br />of sky in motion.</h2></div>
+          <p>Enter coordinates or choose a target. We’ll find the available SPHEREx records, load the image sequence, and give you the controls to spot a moving source.</p>
+        </div>
+
+        <div class="search-panel">
+          <form id="coordinateForm">
+            <label for="coordinateInput">RIGHT ASCENSION / DECLINATION</label>
+            <div class="search-input"><input id="coordinateInput" value="08h 55m 10.831s, -07d 14m 42.53s" aria-label="Right ascension and declination" /><button type="submit">SEARCH SKY <span>↗</span></button></div>
+          </form>
+          <label class="preset-label" for="targetSelect">TRY A TARGET<select id="targetSelect"><option value="barnard">Barnard's Star</option><option value="epsilon">Epsilon Indi B</option><option value="wise0855" selected>WISE 0855</option><option value="rwaurigae">RW Aurigae</option><option value="rdraconis">R Draconis</option></select></label>
+        </div>
+
+        <div class="viewer-layout">
+          <section class="viewer-card">
+            <div class="viewer-head"><div><span class="micro-label">SPHEREx REFERENCE VIEW</span><strong>All-sky infrared composite · 2025</strong></div><div class="viewer-tools"><label>BAND <select id="bandSelect"><option value="all">ALL 102</option></select></label><button id="zoomOut" aria-label="Zoom out">−</button><span id="zoomReadout">1.0×</span><button id="zoomIn" aria-label="Zoom in">+</button><button id="resetView">RESET</button></div></div>
+            <div class="sky-viewport" id="skyViewport"><div class="sky-image-wrap" id="skyImageWrap"><img id="skyImage" src="https://svs.gsfc.nasa.gov/vis/a030000/a031300/a031376/spherex-swipe-00275.png" alt="NASA SPHEREx all-sky infrared map" draggable="false" /><canvas id="fitsCanvas" aria-label="SPHEREx FITS cutout"></canvas></div><div class="crosshair" aria-hidden="true"></div><div class="map-overlay"><span>DRAG TO PAN · SCROLL TO ZOOM</span><span id="viewCoordinates">RA 08h 55m · DEC −07° 14′</span></div><div class="coverage-message" id="coverageMessage" hidden><strong>No observations found here.</strong><span>Try another target or open IRSA to query the archive.</span></div></div>
+            <div class="viewer-foot"><span><i></i> NASA SVS reference image</span><a href="https://svs.gsfc.nasa.gov/31376/" target="_blank" rel="noreferrer">SOURCE ↗</a></div>
+          </section>
+          <aside class="target-card"><div class="card-top"><span class="micro-label">TARGET INSPECTOR</span><span id="dataState" class="status">REFERENCE LOADED</span></div><h3 id="targetName">WISE 0855</h3><p id="targetNote">A nearby cold brown dwarf. Coverage must be verified in IRSA.</p><dl><div><dt>POSITION</dt><dd id="metadataCoordinates">08h 55m 10.831s<br />−07d 14m 42.53s</dd></div><div><dt>OBSERVATION</dt><dd id="metadataDate">2025 reference map</dd></div><div><dt>BAND / QUALITY</dt><dd id="metadataBand">All-sky composite</dd></div><div><dt>EXPOSURE</dt><dd id="metadataQuality">Not provided in preview</dd></div></dl><a class="primary-button" href="https://irsa.ipac.caltech.edu/data/SPHEREx/docs/cutout_tool.html" target="_blank" rel="noreferrer">OPEN IRSA CUTOUT TOOL <span>↗</span></a><button class="secondary-button" id="shareButton">COPY SHAREABLE SEARCH URL</button><p class="fine-print">No metadata is invented. Archive results replace this preview when available.</p></aside>
+        </div>
+
+        <section class="player-card"><div class="player-head"><div><span class="micro-label">02 / TIME PLAYER</span><strong id="timelineLabel">2025 public reference</strong></div><div class="player-buttons"><button id="stepBack" aria-label="Previous observation">←</button><button id="playButton" class="play-button">PLAY ▶</button><button id="stepForward" aria-label="Next observation">→</button></div></div><input id="timeline" class="timeline" type="range" min="0" max="0" value="0" aria-label="SPHEREx observation timeline" /><div class="timeline-labels"><span>NO ARCHIVE DATES LOADED</span><span>2025 REFERENCE</span></div><div class="mode-row"><button class="mode-button active" data-mode="normal">IMAGE VIEW</button><button class="mode-button" data-mode="blink">BLINK MODE</button><button class="mode-button" data-mode="difference">DIFFERENCE MODE</button><span id="modeStatus">One public reference image loaded. Add archive dates to compare.</span></div></section>
+      </section>
+
+      <section class="how-section" id="how-it-works"><div class="section-intro"><div><p class="kicker">03 / WHY MOTION MATTERS</p><h2>Read the sky<br />like a flipbook.</h2></div><p>Asteroids, comets, nearby stars, brown dwarfs, and new worlds reveal themselves when their position or brightness changes between visits.</p></div><div class="steps"><article><b>01</b><h3>Choose a field</h3><p>Search a coordinate or start with a target selected by astronomers and citizen scientists.</p></article><article><b>02</b><h3>Compare epochs</h3><p>Play, blink, or subtract observations taken at different times to make change visible.</p></article><article><b>03</b><h3>Follow the clue</h3><p>Open the archive, inspect the metadata, and take a promising object further.</p></article></div></section>
+
+      <section class="resources-section" id="resources"><div class="resource-title"><div><p class="kicker">04 / DATA &amp; RESOURCES</p><h2>Go deeper.</h2></div><p>Everything here is built to point you toward the public archives and tools behind the mission.</p></div><div class="resource-tools"><label class="resource-search"><span class="sr-only">Search resources</span><input id="resourceSearch" type="search" placeholder="SEARCH ARCHIVES..." /></label><label class="resource-filter"><span class="sr-only">Filter resources</span><select id="resourceFilter"><option value="all">ALL SOURCES</option><option value="nasa">NASA / IPAC</option><option value="canada">CANADIAN PARTNERS</option><option value="gaia">GAIA / ESA</option></select></label><span id="resourceCount">8 RESOURCES</span></div><div class="resource-grid">
+          <a class="resource-link" data-source="nasa" data-search="spherex nasa ipac archive" href="https://irsa.ipac.caltech.edu/Missions/spherex.html" target="_blank" rel="noreferrer"><span>NASA / IPAC</span><strong>SPHEREx resources ↗</strong><small>Mission archive and public data access.</small></a>
+          <a class="resource-link" data-source="nasa" data-search="spherex python notebooks tutorial" href="https://caltech-ipac.github.io/irsa-tutorials/spherex/" target="_blank" rel="noreferrer"><span>LEARN WITH CODE</span><strong>Tutorial notebooks ↗</strong><small>Python examples for SPHEREx data.</small></a>
+          <a class="resource-link" data-source="nasa" data-search="wise wiseview infrared" href="http://byw.tools/wiseview" target="_blank" rel="noreferrer"><span>WISE MISSION</span><strong>WiseView ↗</strong><small>Compare time-based infrared observations.</small></a>
+          <a class="resource-link" data-source="gaia" data-search="gaia esa dr3 data release" href="https://archive.stsci.edu/missions-and-data/gaia" target="_blank" rel="noreferrer"><span>ESA / GAIA</span><strong>Gaia Data Release 3 ↗</strong><small>Astrometry and stellar measurements.</small></a>
+          <a class="resource-link" data-source="canada" data-search="canada cadc astronomy archive" href="https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/en/" target="_blank" rel="noreferrer"><span>CANADA</span><strong>CADC archive ↗</strong><small>Canadian and international observations.</small></a>
+          <a class="resource-link" data-source="canada" data-search="csa neossat asteroids space debris" href="https://www.asc-csa.gc.ca/eng/satellites/neossat/" target="_blank" rel="noreferrer"><span>CSA / NEOSSAT</span><strong>Mission overview ↗</strong><small>Asteroids, debris, and exoplanets.</small></a>
+          <a class="resource-link" data-source="canada" data-search="neossat tutorial python github" href="https://github.com/asc-csa/NEOSSAT_Tutorial" target="_blank" rel="noreferrer"><span>CANADA / CODE</span><strong>NEOSSat tutorial ↗</strong><small>Visualize real spacecraft observations.</small></a>
+          <a class="resource-link" data-source="canada" data-search="neossat dataset data canada" href="https://data.asc-csa.gc.ca/dataset/neossat" target="_blank" rel="noreferrer"><span>OPEN DATA</span><strong>NEOSSat dataset ↗</strong><small>Observations from Canada's space telescope.</small></a>
+        </div></section>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/fitsjs@0.6.6/lib/fits.js"></script>
-    <script src="app.js"></script>
+    <footer><span>SPHEREx MOTION LAB</span><span>Built for public discovery · NASA mission data</span></footer>
+    <script src="https://cdn.jsdelivr.net/npm/fitsjs@0.6.6/lib/fits.js"></script><script src="app.js"></script>
   </body>
 </html>
