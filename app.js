@@ -129,18 +129,11 @@ async function querySpherex(value) {
   const coordinates = getCoordinateParts(value);
   if (!coordinates) throw new Error("Enter RA and Dec as decimal degrees or h/m/s and d/m/s.");
   const [ra, dec] = coordinates;
-  const query = window.location.protocol === "file:"
-    ? new URL("https://irsa.ipac.caltech.edu/ibe/sia2/spherex/qr2/level2")
-    : new URL("/api/spherex", window.location.origin);
-  if (query.hostname.includes("irsa.ipac.caltech.edu")) {
-    query.searchParams.set("POS", `${ra},${dec}`);
-    query.searchParams.set("SIZE", "0.1");
-    query.searchParams.set("RESPONSEFORMAT", "application/json");
-  } else {
-    query.searchParams.set("ra", ra);
-    query.searchParams.set("dec", dec);
-    query.searchParams.set("size", "0.1");
-  }
+  const query = new URL("https://irsa.ipac.caltech.edu/SIA");
+  query.searchParams.set("POS", `CIRCLE ${ra} ${dec} 0.1`);
+  query.searchParams.set("COLLECTION", "spherex_qr3");
+  query.searchParams.set("RESPONSEFORMAT", "JSON");
+  query.searchParams.set("MAXREC", "100");
   const response = await fetch(query);
   if (!response.ok) throw new Error(`IRSA returned HTTP ${response.status}.`);
   const rows = normalizeRows(await response.json());
@@ -202,7 +195,7 @@ function renderObservation(index = currentObservation) {
 
 function loadFitsObservation(observation) {
   return new Promise((resolve, reject) => {
-    const source = window.location.protocol === "file:" ? observation.url : `/api/fits?url=${encodeURIComponent(observation.url)}`;
+    const source = observation.url;
     if (!window.astro?.FITS) {
       reject(new Error("FITS.js did not load."));
       return;
